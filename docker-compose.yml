@@ -1,0 +1,8 @@
+version: "2"
+services:
+  terrarium:
+    image: jamesway/bird-terrarium
+    working_dir: /code
+    volumes:
+      - ./:/code
+    env_file: .env
