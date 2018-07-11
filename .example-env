@@ -3,6 +3,12 @@
 # It's a good idea to copy and not just move this to .env so the sample gets version controlled for other devs to see
 # Then make sure to .gitignore the .env file before committing
 
-AWS_ACCESS_KEY_ID=<access_key>
-AWS_SECRET_ACCESS_KEY=<secret_key>
-AWS_REGION="us-east-1"
+AWS_DEFAULT_REGION=us-east-1
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+
+# terraform vars
+# TF_VAR_ami=
+# TF_VAR_instance_type=
+# TF_VAR_vpc_security_group_ids=[""]
+# TF_VAR_subnet_id=

@@ -2,8 +2,8 @@ FROM python:3.6-slim-stretch
 
 MAINTAINER James R <j@mesway.io>
 
-# I'd rather use build args for the tool versions.
-# The problem is ENVs make displaying the tool versions when the container runs...easy,
+# Build ARGs would be ideal for the tool versions.
+# The problem is ENVs make displaying the tool versions when the container runs much easier,
 # but they allow someone to artificially change the versions with an -e TERRAFORM_VERSION=...
 # Not a huge deal, but it might be confusing if they think that would give them a different version of the tool.
 # My preferred way is to query the tool eg. terraform --version, ansible --version... to display the tool verisons,
@@ -20,7 +20,7 @@ ENV TERRAFORM_VERSION=0.11.7
 ENV ANSIBLE_VERSION=2.6.1
 ENV AWS_CLI_VERSION=1.15.55
 # default region
-ENV AWS_REGION=us-west-2
+ENV AWS_DEFAULT_REGION=us-east-1
 
 COPY td.sh ${SRC_PATH}
 COPY .gitignore ${SRC_PATH}
@@ -35,7 +35,8 @@ WORKDIR ${SRC_PATH}
 RUN BUILD_DEPS='unzip \
                 wget' && \
     # groff is an aws dependency
-    RUN_DEPS='groff' && \
+    RUN_DEPS='groff \
+              ntpdate' && \
     apt-get update && \
     apt-get install -yqq ${BUILD_DEPS} ${RUN_DEPS} --no-install-recommends && \
     # Terraform

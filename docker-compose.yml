@@ -1,8 +1,49 @@
 version: "2"
 services:
-  terrarium:
-    image: jamesway/bird-terrarium
+
+  # couldn't get this to work - I'm guessing privileged: true isn't getting picked up
+  # hwclock:
+  #   image: alpine
+  #   privileged: true
+  #   command:
+  #     - /sbin/hwclock
+  #     - -s
+
+# these are repetitive, they're a hack for user experience
+# ie instead of docker-compose run --rm terradome terraform apply
+#    we can do  docker-compose run --rm terraform apply
+  terraform:
+    image: jamesway/terradome
     working_dir: /code
     volumes:
       - ./:/code
     env_file: .env
+    entrypoint:
+      - /bin/bash
+      - -c
+      - "entrypoint.sh terraform $${@}"
+      - /bin/bash
+
+  ansible:
+    image: jamesway/terradome
+    working_dir: /code
+    volumes:
+      - ./:/code
+    env_file: .env
+    entrypoint:
+      - /bin/bash
+      - -c
+      - "entrypoint.sh ansible $${@}"
+      - /bin/bash
+
+  aws:
+    image: jamesway/terradome
+    working_dir: /code
+    volumes:
+      - ./:/code
+    env_file: .env
+    entrypoint:
+      - /bin/bash
+      - -c
+      - "entrypoint.sh aws $${@}"
+      - /bin/bash
