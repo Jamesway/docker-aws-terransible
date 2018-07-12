@@ -13,7 +13,7 @@
 ### tl;dr
 ```
 cd [project_name]
-wget td.sh
+wget --no-check-certificate https://raw.github.com/Jamesway/docker-terradome/master/td.sh
 chmod +x td.sh
 
 # make sure it works
@@ -36,7 +36,7 @@ cp .example-env .env
 ```
 cd [project_name]
 
-wget td.sh
+wget --no-check-certificate https://raw.github.com/Jamesway/docker-terradome/master/td.sh
 
 # it's always a good idea to look inside the script before you run it
 # also a good idea to take a look a the docker file and entrypoint.sh too
