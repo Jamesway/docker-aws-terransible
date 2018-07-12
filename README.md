@@ -120,6 +120,8 @@ cp .example-env .env
 
 ## Issues
 - Container time drift  
-I spent a good amount of time tracking down an issue on OS X (maybe others) where the container's time would drift from the host.  This gave me some inconsistent aws connection failures. I solved this (I think) with this [hack](https://blog.shameerc.com/2017/03/quick-tip-fixing-time-drift-issue-on-docker-for-mac)
+I spent a good amount of time tracking down an issue on OS X (maybe others) where the container's time would drift from the host.  This gave me some inconsistent aws connection failures. I solved this (I think) with this [hack](https://blog.shameerc.com/2017/03/quick-tip-fixing-time-drift-issue-on-docker-for-mac)  
+If the error keeps happening, try syncing your system clock (os x)  
+```sudo ntpdate -u time.apple.com```
 
 - Not really an issue, but Terraform environment variables are interesting
