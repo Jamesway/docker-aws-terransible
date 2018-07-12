@@ -7,8 +7,12 @@ AWS_DEFAULT_REGION=us-east-1
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 
-# terraform vars
+
+# these have defaults in example.tf
 # TF_VAR_ami=
 # TF_VAR_instance_type=
+
+# if you don't enter these, terraform will prompt you
+# remember here and on the cli, vpc_security_group_ids is a list ["id1", "id2", "id3"]
 # TF_VAR_vpc_security_group_ids=[""]
 # TF_VAR_subnet_id=

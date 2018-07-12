@@ -13,6 +13,20 @@ then
   exit 0
 fi
 
+
+# we are initializing
+if [ "$1" == "init" ]
+then
+  if ! docker run --rm -v $(pwd):/code jamesway/terradome init
+  then
+    echo "houston, we have a problem - init failed"
+    exit 1
+  fi
+  exit 0
+fi
+
+
+# "expand" shortcuts
 # terraform shortcut
 if [ "$1" == "tf" ]
 then
@@ -24,29 +38,29 @@ then
   set -- "ansible" "${@:2}"
 fi
 
-echo "$@"
-
-if [ "$1" == "terraform" ] || [ "$1" == "ansible" ] || [ "$1" == "aws" ] || [ "$1" == "init" ]
+# this is what we came for
+if [ "$1" == "terraform" ] || [ "$1" == "ansible" ] || [ "$1" == "aws" ]
 then
 
-  # if we aren't initializing we check for files we need
-  if [ "$1" != "init" ]
+  # check for missing .example.env or docker_compose.yml - we need to initialize
+  if [ ! -f ".example-env" ] || [ ! -f "docker-compose.yml" ]
   then
+    echo "missing required files, please initialize: ./td.sh init"
+    exit 0
+  fi
 
-    # missing .example.env or docker_compose.yml - we need to initialize
-    if [ ! -f ".example-env" ] || [ ! -f "docker-compose.yml" ]
-    then
-      echo "missing required files, please initialize: ./td.sh init"
-      exit 0
-    fi
+  # check for missing .env - we need to copy
+  if [ ! -f ".env" ]
+  then
+    cat << "EOF"
 
-    # missing .env - we need to copy
-    if [ ! -f ".env" ]
-    then
-      echo "copy .example-env to .env and change the values to suit your needs"
-      echo "IMPORTANT - make sure .gitignore contains .env"
-      exit 0
-    fi
+##########################################################################
+#   IMPORTANT                                                            #
+#   copy .example-env to .env and change the values to suit your needs   #
+##########################################################################
+
+EOF
+    exit 0
   fi
 
   # hack to deal with time drift in container

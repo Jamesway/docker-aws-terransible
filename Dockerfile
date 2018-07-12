@@ -22,12 +22,6 @@ ENV AWS_CLI_VERSION=1.15.55
 # default region
 ENV AWS_DEFAULT_REGION=us-east-1
 
-COPY td.sh ${SRC_PATH}
-COPY .gitignore ${SRC_PATH}
-COPY .example-env ${SRC_PATH}
-COPY docker-compose.yml ${SRC_PATH}
-COPY example.tf ${SRC_PATH}
-
 WORKDIR ${SRC_PATH}
 
 # In life and Docker, I try to minimize the RUNs as much as possible
@@ -54,10 +48,15 @@ RUN BUILD_DEPS='unzip \
     apt-get purge -y --auto-remove ${BUILD_DEPS} && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR ${APP_PATH}
-
-# I keep the entrypoint script stuff on the bottom to take advantage of caching the heavier stuff above
+# I keep the file cp/bash stuff on the bottom to take advantage of caching the heavier stuff above
+COPY .gitignore ${SRC_PATH}
+COPY .example-env ${SRC_PATH}
+COPY docker-compose.yml ${SRC_PATH}
+COPY example.tf ${SRC_PATH}
+COPY td.sh ${SRC_PATH}
 COPY entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+WORKDIR ${APP_PATH}
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]

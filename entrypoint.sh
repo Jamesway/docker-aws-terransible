@@ -107,73 +107,71 @@ then
   echo "generating scaffolding..."
 
   # copy or append .gitignore
-  if [ -f ".gitignore" ]
+  if [ -f "${APP_PATH}/.gitignore" ]
   then
-    if ! cat .gitignore | grep .env
+    if ! cat ${APP_PATH}/.gitignore | grep .env >/dev/null
     then
-      echo ".env" >> .gitignore
-      echo "- appended .env to .gitignore"
+      echo ".env" >> ${APP_PATH}/.gitignore
+      echo "  appended .env to .gitignore"
     fi
   elif cp -n "${SRC_PATH}/.gitignore" "${APP_PATH}"
   then
-    echo "- created .gitignore"
-  fi
-
-  # .example-env
-  if cp -n "${SRC_PATH}/.example-env" "${APP_PATH}"
-  then
-    echo "- created .example.env"
+    echo "  created .gitignore"
   fi
 
   # docker_compose
-  if cp -n "${SRC_PATH}/docker-compose.yml" "${APP_PATH}"
+  if [ ! -f "docker-compose.yml" ]
   then
-    echo "- created docker-compose.yml"
+    cp -n "${SRC_PATH}/docker-compose.yml" "${APP_PATH}"
+    echo "  created docker-compose.yml"
   fi
 
   # sample terraform file
-  if ! ls ${dest}/*.tf
+  if [ ! -f *.tf ]
   then
-    if cp -n "${SRC_PATH}/example.tf" "${APP_PATH}"
-    then
-      echo "- created example.tf"
-    fi
+    cp -n "${SRC_PATH}/example.tf" "${APP_PATH}"
+    echo "  created example.tf"
+  fi
 
   # td.sh wrapper
-  if cp -n "${SRC_PATH}/td.sh" "${APP_PATH}"
+  if [ ! -f "td.sh" ]
   then
-    echo "- created td.sh, chmod +x td.sh to execute"
+    cp -n "${SRC_PATH}/td.sh" "${APP_PATH}"
+    echo "  created td.sh"
   fi
 
-  cat << "EOF"
+  # .example-env
+  if [ ! -f ".example-env" ]
+  then
+    cp -n "${SRC_PATH}/.example-env" "${APP_PATH}"
+    echo "  created .example.env"
+    cat << "EOF"
 
-#############################################################################
-#   IMPORTANT                                                               #
-#   1) copy .example-env to .env and change the values to suit your needs   #
-#   2) if you haven't already, don't forget to: chmod +x td.sh              #
-#############################################################################
+##########################################################################
+#   IMPORTANT                                                            #
+#   copy .example-env to .env and change the values to suit your needs   #
+##########################################################################
 
 EOF
-
+  fi
   exit 0
+fi
 
 # execute the command(s)
-else
 
-  # I used ENVs because when querying the tool with --version, ansible was slow
-  # run the container with not args to see how slow
-  echo
-  if [ "$1" == "terraform" ]
-  then
-    echo "Terraform ${TERRAFORM_VERSION}"
-  elif [ "$1" == "ansible" ]
-  then
-    echo "ansible ${ANSIBLE_VERSION}"
-  elif [ "$1" == "aws" ]
-  then
-    echo "aws-cli ${AWS_CLI_VERSION}"
-  fi
-  echo
-
-  eval "$@"
+# I used ENVs because when querying the tool with --version, ansible was slow
+# run the container with not args to see how slow
+echo
+if [ "$1" == "terraform" ]
+then
+  echo "Terraform ${TERRAFORM_VERSION}"
+elif [ "$1" == "ansible" ]
+then
+  echo "ansible ${ANSIBLE_VERSION}"
+elif [ "$1" == "aws" ]
+then
+  echo "aws-cli ${AWS_CLI_VERSION}"
 fi
+echo
+
+eval "$@"
