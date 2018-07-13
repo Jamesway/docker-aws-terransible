@@ -77,7 +77,9 @@ usage:
   # cons not a lot
 
   cd [project_directory]
+
   # grab the terradome wrapper (td.sh)
+  wget --no-check-certificate https://raw.github.com/Jamesway/docker-terradome/master/td.sh
 
   # make it executable
   chmod +x td.sh
